@@ -12,12 +12,18 @@ import (
 func main() {
 	r := chi.NewRouter()
 
-	// ...
+	proxy := NewReverseProxy("hugo", "1313")
+	r.Use(proxy.ReverseProxy)
 
-	http.ListenAndServe(":8080", r)
+	r.Get("/api", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(200)
+		w.Write([]byte("Hello from API"))
+	})
+
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
 
-const content = ``
+const content = `%b`
 
 func WorkerTest() {
 	t := time.NewTicker(1 * time.Second)
